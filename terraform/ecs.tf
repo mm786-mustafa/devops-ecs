@@ -78,6 +78,26 @@ resource "aws_iam_role_policy" "ecs_task_execution_logs" {
   })
 }
 
+# Allow ECS task execution role to read DB password from Secrets Manager
+resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
+  name = "${var.app_name}-${var.environment}-ecs-task-execution-secrets"
+  role = aws_iam_role.ecs_task_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = aws_secretsmanager_secret.rds_password.arn
+      }
+    ]
+  })
+}
+
 # ECS Task Definition
 resource "aws_ecs_task_definition" "app" {
   family                   = "${var.app_name}-${var.environment}"
@@ -176,7 +196,8 @@ resource "aws_ecs_service" "main" {
 
   depends_on = [
     aws_lb_listener.http,
-    aws_iam_role_policy.ecs_task_execution_logs
+    aws_iam_role_policy.ecs_task_execution_logs,
+    aws_iam_role_policy.ecs_task_execution_secrets
   ]
 
   tags = {
