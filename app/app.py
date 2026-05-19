@@ -46,7 +46,7 @@ def info():
         "name": "DevOps Portfolio App",
         "version": "1.0.0",
         "environment": os.getenv('ENVIRONMENT', 'development'),
-        "region": os.getenv('AWS_REGION', 'us-east-1')
+        "region": os.getenv('AWS_REGION', 'us-east-2')
     }), 200
 
 @app.route('/', methods=['GET'])
