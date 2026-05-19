@@ -101,7 +101,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-2
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -122,11 +122,11 @@ jobs:
             --cluster devops-portfolio-dev-cluster \
             --service devops-portfolio-dev-service \
             --force-new-deployment \
-            --region us-east-1
+            --region us-east-2
 
       - name: Wait for ECS service to stabilize
         run: |
           aws ecs wait services-stable \
             --cluster devops-portfolio-dev-cluster \
             --services devops-portfolio-dev-service \
-            --region us-east-1
+            --region us-east-2
